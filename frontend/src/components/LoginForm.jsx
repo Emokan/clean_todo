@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { loginUser } from "../api"; 
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginForm = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
         if (location.state?.message) {
-            setMessage(location.state.message);
+            toast.info(location.state.message);
         }
     }, [location]);
 
@@ -22,13 +22,14 @@ const LoginForm = ({ onLoginSuccess }) => {
             if (ok) {
                 localStorage.setItem("token", data.token);
                 if (onLoginSuccess) onLoginSuccess(data.token);
+                toast.success("Giriş başarılı! 👋");
                 navigate("/todos");
             } else {
-                setMessage(`❌ ${data.message}`);
+                toast.error("Geçersiz e-posta ya da şifre!");
             }
         } catch (error) {
             console.error("İstek hatası:", error);
-            setMessage("❌ Giriş sırasında bir hata oluştu.");
+            toast.error("Sunucu hatası. Lütfen daha sonra tekrar deneyin.");
         }
     };
 
@@ -59,13 +60,6 @@ const LoginForm = ({ onLoginSuccess }) => {
                     Giriş Yap
                 </button>
             </form>
-            {message && (
-                <p className={`mt-4 text-center text-sm font-medium ${
-                    message.includes("başarılı") ? "text-green-600" : "text-red-600"
-                }`}>
-                    {message}
-                </p>
-            )}
         </div>
     );
 };
