@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-ro
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -29,9 +30,15 @@ function App() {
           />
           <Route path="/login" element={<Login setToken={setToken} />} />
           <Route path="/register" element={<Register />} />
+
+          {/* Private route kullanımı burada */}
           <Route
             path="/todos"
-            element={token ? <Home onLogout={handleLogout} /> : <Navigate to="/login" />}
+            element={
+              <PrivateRoute>
+                <Home onLogout={handleLogout} />
+              </PrivateRoute>
+            }
           />
         </Routes>
       </main>
@@ -58,7 +65,7 @@ function Header({ token, onLogout }) {
                 onClick={onLogout}
                 className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
               >
-                Çikiş Yap
+                Çıkış Yap
               </button>
             </>
           )}
