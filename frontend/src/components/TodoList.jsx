@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CreateTodo from "./CreateTodo";
 import { getTodos, deleteTodo, updateTodo } from "../api";
+import { toast } from "react-toastify";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
@@ -35,14 +36,14 @@ const TodoList = () => {
     try {
       const { ok, data } = await deleteTodo(id, token);
       if (ok) {
-        setMessage("✅ Görev silindi.");
+        toast.info("Görev silindi.");
         fetchTodos();
       } else {
-        setMessage(`❌ ${data.message}`);
+        toast.error("Silme işlemi başarisiz.");
       }
     } catch (err) {
-      console.error("Silme hatası:", err);
-      setMessage("❌ Görev silinirken bir hata oluştu.");
+      console.error("Silme hatasi:", err);
+      toast.error("Sunucu hatasi!");
     }
   };
 
@@ -51,15 +52,15 @@ const TodoList = () => {
     try {
       const { ok, data } = await updateTodo(id, editingText, token);
       if (ok) {
-        setMessage("✅ Görev güncellendi.");
+        toast.success("Görev güncellendi!");
         setEditingId(null);
         fetchTodos();
       } else {
-        setMessage(`❌ ${data.message}`);
+        toast.error("Güncelleme başarisiz.");
       }
     } catch (err) {
-      console.error("Güncelleme hatası:", err);
-      setMessage("❌ Görev güncellenirken bir hata oluştu.");
+      console.error("Güncelleme hatasi:", err);
+      toast.error("Sunucu hatasi!");
     }
   };
 

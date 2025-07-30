@@ -17,15 +17,15 @@ const CreateTodo = ({ onTodoCreated }) => {
     try {
       const { ok, data } = await createTodo(text, token);
       if (ok) {
-        setMessage("✅ Todo başarıyla eklendi!");
+        toast.success("Görev başariyla eklendi!");
         setText("");
         onTodoCreated();
       } else {
-        setMessage(`❌ ${data.message}`);
+        toast.error("Görev eklenemedi.");
       }
     } catch (err) {
-      console.error("İstek hatası:", err);
-      setMessage("❌ Todo eklenirken bir hata oluştu.");
+      console.error("İstek hatasi:", err);
+      toast.error("Sunucu hatasi!");
     }
   };
 
