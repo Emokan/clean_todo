@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createTodo } from "../api";
+import { toast } from "react-toastify";
 
 const CreateTodo = ({ onTodoCreated }) => {
   const [text, setText] = useState("");
@@ -15,7 +16,7 @@ const CreateTodo = ({ onTodoCreated }) => {
     }
 
     try {
-      const { ok, data } = await createTodo(text, token);
+      const { ok } = await createTodo(text, token);
       if (ok) {
         toast.success("Görev başariyla eklendi!");
         setText("");

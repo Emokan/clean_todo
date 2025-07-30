@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
-  const [message, setMessage] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
 
@@ -13,7 +12,7 @@ const TodoList = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("⚠️ Giriş yapmadan verileri göremezsiniz.");
+      toast.warning("⚠️ Giriş yapmadan verileri göremezsiniz.");
       return;
     }
 
@@ -21,46 +20,45 @@ const TodoList = () => {
       const { ok, data } = await getTodos(token);
       if (ok) {
         setTodos(data);
-        setMessage("✅ Veriler başarıyla yüklendi.");
       } else {
-        setMessage(`❌ ${data.message || "Veriler alınamadı."}`);
+        toast.error("Veriler alınamadı!");
       }
     } catch (error) {
       console.error("İstek hatası:", error);
-      setMessage("❌ Todo verileri alınırken bir hata oluştu.");
+      toast.error("Görev verileri alınırken bir hata oluştu!");
     }
   };
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      const { ok, data } = await deleteTodo(id, token);
+      const { ok } = await deleteTodo(id, token);
       if (ok) {
         toast.info("Görev silindi.");
         fetchTodos();
       } else {
-        toast.error("Silme işlemi başarisiz.");
+        toast.error("Silme işlemi başarısız.");
       }
     } catch (err) {
-      console.error("Silme hatasi:", err);
-      toast.error("Sunucu hatasi!");
+      console.error("Silme hatası:", err);
+      toast.error("Sunucu hatası!");
     }
   };
 
   const handleUpdate = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      const { ok, data } = await updateTodo(id, editingText, token);
+      const { ok } = await updateTodo(id, editingText, token);
       if (ok) {
         toast.success("Görev güncellendi!");
         setEditingId(null);
         fetchTodos();
       } else {
-        toast.error("Güncelleme başarisiz.");
+        toast.error("Güncelleme başarısız.");
       }
     } catch (err) {
-      console.error("Güncelleme hatasi:", err);
-      toast.error("Sunucu hatasi!");
+      console.error("Güncelleme hatası:", err);
+      toast.error("Sunucu hatası!");
     }
   };
 
@@ -72,7 +70,6 @@ const TodoList = () => {
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">✅ Yapılacaklar Listesi</h2>
       <CreateTodo onTodoCreated={fetchTodos} />
-      {message && <p className="mt-2 text-sm text-gray-700">{message}</p>}
 
       <ul className="mt-4 space-y-3">
         {todos.map((todo) => (
