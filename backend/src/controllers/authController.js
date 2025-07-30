@@ -10,7 +10,8 @@ const registerUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Bu email zaten kayıtlı." });
+      res.status(400);
+      throw new Error("Bu email zaten kayitli");
     }
 
     const user = await User.create({ email, password });

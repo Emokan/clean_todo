@@ -5,6 +5,7 @@ const connectDB = require('../config/database');
 
 const authRoutes = require('./routes/authRoutes');
 const todoRoutes = require('./routes/todoRoutes');
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,3 +25,5 @@ app.use('/api/todos', todoRoutes);
 app.listen(PORT, () => {
   console.log(`🚀 Sunucu http://localhost:${PORT} adresinde çalışıyor`);
 });
+
+app.use(errorHandler);

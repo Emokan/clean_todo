@@ -38,19 +38,22 @@ exports.deleteTodo = async (req, res) => {
     const todo = await Todo.findById(id);
 
     if (!todo) {
-      return res.status(404).json({ message: "Görev bulunamadi." });
+      res.status(404);
+      throw new Error("Görev bulunamadi");
     }
 
     if (todo.userId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Yetkisiz." });
+      res.status(403);
+      throw new Error("Yetkisiz");
     }
 
     await todo.deleteOne();
     res.json({ message: "Görev silindi." });
 
   } catch (err) {
-    console.error("Silme hatası:", err); // burada konsola log düşecek
-    res.status(500).json({ message: "Silme hatasi.", error: err.message });
+    console.error("Silme hatasi:", err); // burada konsola log düşecek
+    res.status(500);
+    throw new Error("Silme Hatasi");
   }
 };
 
@@ -63,11 +66,13 @@ exports.updateTodo = async (req, res) => {
         const todo = await Todo.findById(id);
 
         if (!todo) {
-            return res.status(404).json({ message: "Görev bulunamadi." });
+            res.status(404);
+            throw new Error("Görev bulunamadi");
         }
 
         if (todo.userId.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Yetkisiz." });
+            res.status(403);
+            throw new Error("Yetkisiz");
         }
 
         todo.text = text;
@@ -75,6 +80,7 @@ exports.updateTodo = async (req, res) => {
 
         res.json({ message: "Görev güncellendi.", todo });
     } catch (err) {
-        res.status(500).json({ message: "Güncelleme hatasi.", error: err.message });
+        res.status(500);
+        throw new Error("Güncelleme Hatasi");
     }
 };
